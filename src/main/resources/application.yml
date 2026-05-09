@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: hr_platform
+
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/hr_platform_db
+    username: hr_admin
+    password: moya_hr123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+      jakarta:
+        persistence:
+          validation:
+            mode: callback
+
+  messages:
+    basename: messages
+
+server:
+  port: 8081
+  error:
+    include-message: always
+
+# Twilio Configuration
+twilio:
+  account-sid: ${TWILIO_ACCOUNT_SID}
+  auth-token: ${TWILIO_AUTH_TOKEN}
+  whatsapp-from: whatsapp:+14155238886  # fixed capital A
+
+# JWT Configuration
+application:
+  security:
+    jwt:
+      secret-key: ok5pm2fiBYdZlvJjmHTHPAy29CXZNud+jwPJnRWv7oqGQxERmomaXnPd+5CX0DoSa3MT38khBS4lE7+CFANPIQ==
+      expiration: 36000000
