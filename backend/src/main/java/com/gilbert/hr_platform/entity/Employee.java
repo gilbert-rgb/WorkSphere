@@ -1,5 +1,6 @@
 package com.gilbert.hr_platform.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "employees")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,20 +20,34 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 20)
     private String whatsappNumber;
 
     @Column(unique = true)
     private String email;
 
-    @ManyToOne
+    // LINK EMPLOYEE TO USER ACCOUNT
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"employee"})
+    private User user;
+
+    // DEPARTMENT RELATIONSHIP
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
+    @JsonIgnoreProperties({"employees"})
     private Department department;
 
+    @Column(nullable = false)
     private String position;
+
+    @Column(nullable = false)
     private BigDecimal salary;
 
     @Enumerated(EnumType.STRING)
@@ -44,13 +60,18 @@ public class Employee {
     private LocalDateTime updatedAt;
 
     public enum Status {
-        PENDING, ACTIVE, INACTIVE
+        PENDING,
+        ACTIVE,
+        INACTIVE
     }
 
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        status = Status.PENDING;
+
+        if (status == null) {
+            status = Status.PENDING;
+        }
     }
 
     @PreUpdate
