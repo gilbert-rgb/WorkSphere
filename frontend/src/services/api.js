@@ -25,6 +25,14 @@ export const register = (data) =>
     body: JSON.stringify(data),
   }).then((r) => r.json());
 
+// used by Admin to register users with auth token
+export const registerUser = (data) =>
+  fetch(`${BASE_URL}/auth/register`, {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify(data),
+  }).then((r) => r.json());
+
 // EMPLOYEES
 export const getEmployees = () =>
   fetch(`${BASE_URL}/employees`, { headers: headers() }).then((r) => r.json());
@@ -98,3 +106,10 @@ export const checkOut = () =>
     method: "PUT",
     headers: headers(),
   }).then((r) => r.json());
+
+// PAYROLL
+export const getPayroll = () =>
+  fetch(`${BASE_URL}/payroll`, { headers: headers() }).then((r) => r.json());
+
+export const getMyPayroll = () =>
+  fetch(`${BASE_URL}/payroll/me`, { headers: headers() }).then((r) => r.json());
