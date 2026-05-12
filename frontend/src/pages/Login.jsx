@@ -11,16 +11,40 @@ export default function Login({ onLogin, onBack }) {
     setLoading(true);
     try {
       const data = await login(form.username, form.password);
-      if (data.token) {
+
+      if (data?.token) {
+        // Decode JWT payload
         const payload = JSON.parse(atob(data.token.split(".")[1]));
-        const role = payload.role?.[0]?.replace("ROLE_", "") || "EMPLOYEE";
+
+        // Handle role as string, array, or authorities array
+        const rawRole = Array.isArray(payload.role)
+          ? payload.role[0]
+          : typeof payload.role === "string"
+          ? payload.role
+          : Array.isArray(payload.authorities)
+          ? payload.authorities[0]?.authority || payload.authorities[0]
+          : "EMPLOYEE";
+
+        const role = rawRole.replace("ROLE_", "");
+
+        const user = {
+          token: data.token,
+          username: form.username,
+          role,
+        };
+
+        // Debug — remove after confirming it works
+        console.log("[Login] JWT payload:", payload);
+        console.log("[Login] Resolved role:", role);
+        console.log("[Login] User saved:", user);
+
         toast.success("Welcome back! 👋");
-        onLogin({ token: data.token, username: form.username, role });
+        onLogin(user); // App.jsx saves to localStorage
       } else {
-        toast.error("Invalid username or password");
+        toast.error(data?.message || "Invalid username or password");
       }
-    } catch {
-      toast.error("Server error. Please try again.");
+    } catch (err) {
+      toast.error(err.message || "Server error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -39,7 +63,8 @@ export default function Login({ onLogin, onBack }) {
         <div className="relative z-10 flex items-center gap-3">
           <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
             <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </div>
           <span className="text-white font-bold text-xl">WorkSphere</span>
@@ -77,7 +102,9 @@ export default function Login({ onLogin, onBack }) {
             "WorkSphere transformed how we manage our team. Everything is seamless and fast."
           </p>
           <div className="flex items-center gap-3 mt-4">
-            <div className="w-8 h-8 rounded-full bg-orange-400 flex items-center justify-center text-white text-xs font-bold">SK</div>
+            <div className="w-8 h-8 rounded-full bg-orange-400 flex items-center justify-center text-white text-xs font-bold">
+              SK
+            </div>
             <div>
               <p className="text-white text-xs font-semibold">Sarah K.</p>
               <p className="text-indigo-300 text-xs">HR Director, TechCorp</p>
@@ -94,7 +121,8 @@ export default function Login({ onLogin, onBack }) {
           <div className="flex items-center gap-2 mb-6 lg:hidden">
             <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
             <span className="font-bold text-gray-900 text-lg">WorkSphere</span>
@@ -177,6 +205,7 @@ export default function Login({ onLogin, onBack }) {
               ))}
             </div>
           </div>
+
         </div>
       </div>
     </div>
