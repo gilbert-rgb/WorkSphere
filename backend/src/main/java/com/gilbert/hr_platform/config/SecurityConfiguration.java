@@ -3,6 +3,7 @@ package com.gilbert.hr_platform.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,26 +37,32 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(auth -> auth
 
-                        // PUBLIC
+                        // ── PUBLIC ──────────────────────────────────────────
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/whatsapp/webhook").permitAll()
+                        .requestMatchers("/api/v1/whatsapp/**").permitAll()
+                        .requestMatchers("/api/v1/otp/**").permitAll()
 
-                        // ADMIN ONLY
+                        // ── ADMIN ONLY ───────────────────────────────────────
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
 
-                        // ADMIN + HR
+                        // ── EMPLOYEE — own payroll ───────────────────────────
+                        // MUST come before the general /api/v1/payroll/** rule
+                        .requestMatchers(HttpMethod.GET, "/api/v1/payroll/me")
+                        .hasAnyRole("ADMIN", "HR", "EMPLOYEE")
+
+                        // ── ADMIN + HR ───────────────────────────────────────
                         .requestMatchers("/api/v1/employees/**").hasAnyRole("ADMIN", "HR")
                         .requestMatchers("/api/v1/departments/**").hasAnyRole("ADMIN", "HR")
                         .requestMatchers("/api/v1/leave/approve/**").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers("/api/v1/leave/reject/**").hasAnyRole("ADMIN", "HR")
                         .requestMatchers("/api/v1/payroll/**").hasAnyRole("ADMIN", "HR")
 
-                        // ALL AUTHENTICATED USERS
+                        // ── ALL AUTHENTICATED USERS ──────────────────────────
                         .requestMatchers("/api/v1/leave/**").authenticated()
                         .requestMatchers("/api/v1/attendance/**").authenticated()
-                        .requestMatchers("/api/v1/whatsapp/send").permitAll()
-                        .requestMatchers("/api/v1/otp/**").permitAll()
 
+                        // ── ANYTHING ELSE ────────────────────────────────────
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider)
@@ -67,14 +74,12 @@ public class SecurityConfiguration {
         return http.build();
     }
 
-    // Find this method in SecurityConfiguration.java and update it:
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "http://127.0.0.1:5173",  // ← add this line
+                "http://127.0.0.1:5173",
                 "http://localhost:3000",
                 "http://127.0.0.1:3000"
         ));

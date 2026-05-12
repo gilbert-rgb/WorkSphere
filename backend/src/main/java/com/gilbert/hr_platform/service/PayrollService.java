@@ -39,4 +39,7 @@ public class PayrollService {
     public List<Payroll> getEmployeePayroll(Long empId) {
         return repo.findByEmployeeId(empId);
     }
+    public List<Payroll> getAllPayroll() {
+        return repo.findAll();
+    }
 }

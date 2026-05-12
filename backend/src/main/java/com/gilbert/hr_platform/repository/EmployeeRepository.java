@@ -10,4 +10,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByWhatsappNumber(String whatsappNumber);
 
     Optional<Employee> findByUserId(Long id);
+    Optional<Employee> findByUserUsername(String username);
 }
