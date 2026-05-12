@@ -4,7 +4,7 @@ export default function LandingPage({ onGetStarted }) {
 
       {/* Top banner */}
       <div className="bg-orange-50 text-center py-2 px-4 text-sm text-orange-700 border-b border-orange-100">
-        🚀 Streamline your HR workflows — onboarding, payroll, and more in one place!
+        Streamline your HR workflows — onboarding, payroll, and more in one place!
       </div>
 
       {/* Navbar */}
@@ -37,6 +37,7 @@ export default function LandingPage({ onGetStarted }) {
 
       {/* Hero */}
       <section className="flex flex-col md:flex-row items-center justify-between px-8 md:px-16 py-20 max-w-7xl mx-auto gap-12">
+        {/* Left — Text */}
         <div className="flex-1 max-w-xl">
           <span className="inline-block bg-orange-100 text-orange-600 text-xs font-semibold px-3 py-1 rounded-full mb-4">
             ✦ Now with WhatsApp Bot Integration
@@ -73,36 +74,33 @@ export default function LandingPage({ onGetStarted }) {
           </div>
         </div>
 
-        <div className="flex-1 relative flex items-center justify-center min-h-80">
-          <div className="absolute w-64 h-64 bg-teal-100 rounded-full top-0 right-8 opacity-60" />
-          <div className="absolute w-40 h-40 bg-orange-100 rounded-full bottom-0 left-8 opacity-60" />
+        {/* Right — Macbook Image */}
+        <div className="flex-1 relative flex items-center justify-center">
+          {/* Decorative blobs */}
+          <div className="absolute w-72 h-72 bg-teal-100 rounded-full top-0 right-0 opacity-50 blur-2xl" />
+          <div className="absolute w-48 h-48 bg-orange-100 rounded-full bottom-0 left-0 opacity-50 blur-2xl" />
 
-          <div className="relative z-10 bg-white shadow-xl rounded-2xl p-4 w-56 mr-4 border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm">AK</div>
-              <div>
-                <p className="font-semibold text-gray-800 text-sm">Alice Kim</p>
-                <p className="text-xs text-gray-400">Team Lead · Engineering</p>
+          {/* Image card */}
+          <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border border-gray-100 w-full max-w-lg">
+            <img
+              src="/macbook.jpg"
+              alt="HR Platform Dashboard on Macbook"
+              className="w-full h-auto object-cover"
+            />
+            {/* Overlay badge */}
+            <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur rounded-2xl px-4 py-3 flex items-center justify-between shadow-lg border border-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="text-green-600 text-sm">✓</span>
+                </div>
+                <div>
+                  <p className="text-gray-800 text-xs font-semibold">Payroll Processed</p>
+                  <p className="text-gray-400 text-xs">All 128 employees · May 2026</p>
+                </div>
               </div>
-            </div>
-            <div className="mt-3 flex items-center justify-between">
-              <span className="bg-green-50 text-green-600 text-xs font-medium px-2 py-1 rounded-full">✓ Checked In</span>
-              <span className="text-xs text-gray-400">09:02 AM</span>
-            </div>
-          </div>
-
-          <div className="relative z-10 bg-white shadow-xl rounded-2xl p-4 w-56 mt-8 border border-gray-100">
-            <p className="text-xs text-gray-400 mb-2 font-medium">Leave Request</p>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-700 font-bold text-sm">JM</div>
-              <div>
-                <p className="font-semibold text-gray-800 text-sm">James M.</p>
-                <p className="text-xs text-gray-400">3 days · Annual Leave</p>
-              </div>
-            </div>
-            <div className="mt-3 flex gap-2">
-              <button className="flex-1 bg-indigo-600 text-white text-xs py-1.5 rounded-lg font-medium">Approve</button>
-              <button className="flex-1 border border-gray-200 text-gray-500 text-xs py-1.5 rounded-lg font-medium">Decline</button>
+              <span className="bg-green-50 text-green-600 text-xs font-semibold px-2 py-1 rounded-full border border-green-100">
+                Done
+              </span>
             </div>
           </div>
         </div>
