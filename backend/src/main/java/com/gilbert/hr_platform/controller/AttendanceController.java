@@ -35,9 +35,14 @@ public class AttendanceController {
         return ResponseEntity.ok(attendance);
     }
 
-    @PutMapping("/checkout/{attendanceId}")
-    public ResponseEntity<?> checkOut(@PathVariable Long attendanceId) {
-        Attendance attendance = attendanceService.checkOut(attendanceId);
+    // UPDATED: Now matches the 'Smart Checkout' logic
+    @PutMapping("/checkout")
+    public ResponseEntity<?> checkOut(@AuthenticationPrincipal User user) {
+        Employee employee = employeeRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new RuntimeException("Employee not found for this user"));
+
+        // Pass the full Employee object to the service
+        Attendance attendance = attendanceService.checkOut(employee);
         return ResponseEntity.ok(attendance);
     }
 

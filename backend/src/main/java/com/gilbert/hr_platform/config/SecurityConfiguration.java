@@ -53,8 +53,8 @@ public class SecurityConfiguration {
                         // ALL AUTHENTICATED USERS
                         .requestMatchers("/api/v1/leave/**").authenticated()
                         .requestMatchers("/api/v1/attendance/**").authenticated()
-                        .requestMatchers("/api/v1/whatsapp/send").authenticated()
-                        .requestMatchers("/api/v1/otp/**").authenticated()
+                        .requestMatchers("/api/v1/whatsapp/send").permitAll()
+                        .requestMatchers("/api/v1/otp/**").permitAll()
 
                         .anyRequest().authenticated()
                 )

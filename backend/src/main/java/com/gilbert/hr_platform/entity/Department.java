@@ -1,5 +1,6 @@
 package com.gilbert.hr_platform.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +23,7 @@ public class Department {
 
     private String description;
 
-    // One department → many employees
     @OneToMany(mappedBy = "department")
+    @JsonIgnore
     private List<Employee> employees;
 }

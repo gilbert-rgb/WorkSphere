@@ -39,10 +39,11 @@ public class Employee {
     private User user;
 
     // DEPARTMENT RELATIONSHIP
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
-    @JsonIgnoreProperties({"employees"})
+    @JsonIgnoreProperties({"employees", "hibernateLazyInitializer"})
     private Department department;
+
 
     @Column(nullable = false)
     private String position;

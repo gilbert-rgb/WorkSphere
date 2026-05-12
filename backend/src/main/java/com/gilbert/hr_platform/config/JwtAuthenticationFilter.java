@@ -47,6 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             username = jwtService.extractUsername(jwt);
         } catch (Exception e) {
+            System.out.println("❌ Failed to extract username from token: " + e.getMessage());
             filterChain.doFilter(request, response);
             return;
         }
@@ -59,8 +60,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     userDetailsService.loadUserByUsername(username);
 
             // 4. Validate token
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            boolean valid = jwtService.isTokenValid(jwt, userDetails);
+            System.out.println("🔐 Token valid: " + valid);
+            System.out.println("👤 Username: " + username);
+            System.out.println("🎭 Authorities: " + userDetails.getAuthorities());
 
+            if (valid) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 userDetails,
@@ -74,6 +79,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+                System.out.println("✅ Auth set for: " + username + " roles: " + userDetails.getAuthorities());
+            } else {
+                System.out.println("❌ Token invalid for: " + username);
             }
         }
 
