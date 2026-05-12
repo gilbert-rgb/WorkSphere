@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { login } from "../services/api";
 
-export default function Login({ onLogin, onBack }) {
+export default function Login({ onLogin, onBack, onOtpLogin }) {
   const [form, setForm] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
 
@@ -32,11 +32,6 @@ export default function Login({ onLogin, onBack }) {
           username: form.username,
           role,
         };
-
-        // Debug — remove after confirming it works
-        console.log("[Login] JWT payload:", payload);
-        console.log("[Login] Resolved role:", role);
-        console.log("[Login] User saved:", user);
 
         toast.success("Welcome back! 👋");
         onLogin(user); // App.jsx saves to localStorage
@@ -103,10 +98,10 @@ export default function Login({ onLogin, onBack }) {
           </p>
           <div className="flex items-center gap-3 mt-4">
             <div className="w-8 h-8 rounded-full bg-orange-400 flex items-center justify-center text-white text-xs font-bold">
-              SK
+              CB
             </div>
             <div>
-              <p className="text-white text-xs font-semibold">Sarah K.</p>
+              <p className="text-white text-xs font-semibold">Chebson.</p>
               <p className="text-indigo-300 text-xs">HR Director, TechCorp</p>
             </div>
           </div>
@@ -189,6 +184,24 @@ export default function Login({ onLogin, onBack }) {
               ) : "Sign In →"}
             </button>
           </form>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-6">
+            <div className="flex-1 h-px bg-gray-100" />
+            <span className="text-gray-300 text-xs">or</span>
+            <div className="flex-1 h-px bg-gray-100" />
+          </div>
+
+          {/* WhatsApp OTP Login */}
+          <button
+            onClick={onOtpLogin}
+            className="w-full flex items-center justify-center gap-2 border border-green-200 bg-green-50 hover:bg-green-100 text-green-700 font-semibold rounded-xl py-3 text-sm transition-all duration-200"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+            </svg>
+            Login with WhatsApp OTP
+          </button>
 
           {/* Demo accounts */}
           <div className="mt-8 pt-6 border-t border-gray-100">
