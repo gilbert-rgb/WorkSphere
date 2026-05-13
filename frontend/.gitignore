@@ -38,4 +38,4 @@ frontend/.env
 .env
 *.env
 application-local.yml
-EOF
+EOF.env.production
