@@ -1,4 +1,6 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "https://worksphere-7l2w.onrender.com";
+const BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://worksphere-7l2w.onrender.com/api/v1";
 
 const getToken = () => {
   const user = localStorage.getItem("hr_user");
