@@ -1,4 +1,8 @@
-const BASE_URL = import.meta.env.VITE_API_URL || "https://worksphere-7l2w.onrender.com/api/v1";
+// This logic ensures /api/v1 is only added if it's not already there
+const rawUrl = import.meta.env.VITE_API_URL || "https://worksphere-7l2w.onrender.com";
+const cleanUrl = rawUrl.endsWith("/api/v1") ? rawUrl : `${rawUrl}/api/v1`;
+
+const BASE_URL = cleanUrl;
 
 // ─── Token Helpers ────────────────────────────────────────────────────────────
 
