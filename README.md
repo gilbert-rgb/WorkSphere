@@ -1,142 +1,192 @@
-# HR Platform API
+# WorkSphere — HR Management Platform
 
-A Spring Boot-based Human Resource Management Platform with WhatsApp Bot integration, JWT authentication, OTP verification, and role-based access control.
+A full-stack Human Resource Management Platform built with **Spring Boot** and **React**, featuring WhatsApp Bot integration, JWT authentication, OTP login, payroll management, attendance tracking, and role-based access control.
+
+🌐 **Live Demo:** [https://hrplatformworksphere.netlify.app](https://hrplatformworksphere.netlify.app)  
+🔗 **Backend API:** [https://worksphere-7l2w.onrender.com](https://worksphere-7l2w.onrender.com)  
+📦 **GitHub:** [https://github.com/gilbert-rgb/WorkSphere](https://github.com/gilbert-rgb/WorkSphere)
 
 ---
 
 ## Tech Stack
 
+### Backend
 | Technology | Version |
 |------------|---------|
 | Java | 21 |
 | Spring Boot | 3.3.5 |
 | Spring Security | 6.3.4 |
-| PostgreSQL | 16 |
+| PostgreSQL | 17 (Neon) |
 | Hibernate / JPA | 6.5.3 |
 | Twilio WhatsApp API | 10.1.5 |
 | JWT (jjwt) | 0.11.5 |
 | Lombok | 1.18.34 |
-| Maven | - |
+| Maven | 3.9.6 |
+
+### Frontend
+| Technology | Version |
+|------------|---------|
+| React | 18 |
+| Vite | 5 |
+| Tailwind CSS | 3 |
+| React Toastify | - |
+
+### Infrastructure
+| Service | Provider |
+|---------|----------|
+| Frontend Hosting | Netlify |
+| Backend Hosting | Render |
+| Database | Neon (PostgreSQL 17) |
+| WhatsApp API | Twilio Sandbox |
 
 ---
 
 ## Features
 
-- JWT-based authentication and authorization
-- Role-based access control (ADMIN, HR, EMPLOYEE)
-- WhatsApp Bot via Twilio Sandbox
-- OTP verification via WhatsApp
-- Employee management
-- Department management
-- Automated check-in/check-out via WhatsApp
-- Leave requests via WhatsApp
-- Payroll queries via WhatsApp
+- ✅ JWT-based authentication and authorization
+- ✅ Role-based access control (ADMIN, HR, EMPLOYEE)
+- ✅ WhatsApp OTP login
+- ✅ WhatsApp Bot via Twilio Sandbox
+- ✅ Employee management (CRUD)
+- ✅ Department management
+- ✅ Payroll generation and payslip viewing
+- ✅ Leave request and approval workflow
+- ✅ Attendance check-in/check-out (web + WhatsApp)
+- ✅ Payroll queries via WhatsApp
+- ✅ Docker support for local development
+- ✅ Deployed on Render + Netlify + Neon
 
 ---
 
 ## Project Structure
 
 ```
-hr_platform/
-├── src/main/java/com/gilbert/hr_platform/
-│   ├── auth/
-│   │   ├── AuthenticationController.java
-│   │   ├── AuthenticationService.java
-│   │   ├── AuthenticationRequest.java
-│   │   ├── AuthenticationResponse.java
-│   │   └── RegisterRequest.java
-│   ├── config/
-│   │   ├── ApplicationConfig.java
-│   │   ├── JwtAuthenticationFilter.java
-│   │   ├── JwtService.java
-│   │   └── SecurityConfig.java
-│   ├── entity/
-│   │   ├── User.java
-│   │   ├── Employee.java
-│   │   ├── Department.java
-│   │   └── Role.java (enum)
-│   ├── repository/
-│   │   ├── UserRepository.java
-│   │   ├── EmployeeRepository.java
-│   │   └── DepartmentRepository.java
-│   ├── service/
-│   │   └── DepartmentService.java
-│   ├── whatsapp/
-│   │   ├── WhatsappController.java
-│   │   ├── WhatsappService.java
-│   │   ├── WhatsAppCommandParser.java
-│   │   ├── OtpCode.java
-│   │   ├── OtpService.java
-│   │   └── OtpRepository.java
-│   └── HrPlatformApplication.java
-└── src/main/resources/
-    └── application.yml
+WorkSphere/
+├── backend/                          # Spring Boot API
+│   ├── src/main/java/com/gilbert/hr_platform/
+│   │   ├── auth/                     # Authentication (JWT)
+│   │   │   ├── AuthenticationController.java
+│   │   │   ├── AuthenticationService.java
+│   │   │   ├── AuthenticationRequest.java
+│   │   │   ├── AuthenticationResponse.java
+│   │   │   └── RegisterRequest.java
+│   │   ├── config/                   # Security & JWT config
+│   │   │   ├── AppConfig.java
+│   │   │   ├── JwtAuthenticationFilter.java
+│   │   │   ├── JwtService.java
+│   │   │   └── SecurityConfiguration.java
+│   │   ├── controller/               # REST Controllers
+│   │   │   ├── AttendanceController.java
+│   │   │   ├── DepartmentController.java
+│   │   │   ├── EmployeeController.java
+│   │   │   ├── LeaveController.java
+│   │   │   └── PayrollController.java
+│   │   ├── entity/                   # JPA Entities
+│   │   │   ├── User.java
+│   │   │   ├── Employee.java
+│   │   │   ├── Department.java
+│   │   │   ├── Attendance.java
+│   │   │   ├── LeaveRequest.java
+│   │   │   ├── Payroll.java
+│   │   │   └── Role.java (enum)
+│   │   ├── repository/               # Spring Data JPA
+│   │   ├── service/                  # Business Logic
+│   │   └── whatsapp/                 # WhatsApp Bot
+│   │       ├── WhatsappController.java
+│   │       ├── WhatsappService.java
+│   │       ├── WhatsAppCommandParser.java
+│   │       ├── OtpCode.java
+│   │       ├── OtpController.java
+│   │       ├── OtpService.java
+│   │       └── OtpRepository.java
+│   ├── Dockerfile
+│   └── pom.xml
+│
+├── frontend/                         # React App
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── LandingPage.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── OtpLogin.jsx
+│   │   │   ├── AdminDashboard.jsx
+│   │   │   ├── HRDashboard.jsx
+│   │   │   └── EmployeeDashboard.jsx
+│   │   ├── components/
+│   │   │   └── Sidebar.jsx
+│   │   ├── services/
+│   │   │   └── api.js
+│   │   └── App.jsx
+│   ├── Dockerfile
+│   ├── nginx.conf
+│   └── package.json
+│
+├── docker-compose.yml
+└── README.md
 ```
 
 ---
 
-## Prerequisites
+## Getting Started (Local Development)
 
+### Prerequisites
 - Java 21
 - Maven
-- PostgreSQL 16 (via WSL or native)
-- Twilio Account with WhatsApp Sandbox enabled
-- ngrok (for webhook testing locally)
+- Node.js 20+
+- PostgreSQL 16+ (or Docker)
+- Twilio Account with WhatsApp Sandbox
 
 ---
 
-## Getting Started
-
-### 1. Clone the repository
+### Option A — Run with Docker Compose
 
 ```bash
-git clone https://github.com/your-username/hr_platform.git
-cd hr_platform
+git clone https://github.com/gilbert-rgb/WorkSphere.git
+cd WorkSphere
+
+# Create .env file
+cp .env.example .env
+# Fill in your real values in .env
+
+docker-compose up --build
 ```
 
-### 2. Start PostgreSQL (WSL)
+App runs at:
+- Frontend: `http://localhost`
+- Backend: `http://localhost:8081`
 
+---
+
+### Option B — Run Manually
+
+#### 1. Clone the repo
+```bash
+git clone https://github.com/gilbert-rgb/WorkSphere.git
+cd WorkSphere
+```
+
+#### 2. Start PostgreSQL
 ```bash
 sudo pg_ctlcluster 16 main start
-```
-
-### 3. Create the database and user
-
-```bash
 sudo -u postgres psql
 ```
-
 ```sql
-CREATE USER hr_admin WITH PASSWORD 'moya_hr123';
+CREATE USER hr_admin WITH PASSWORD 'your_password';
 CREATE DATABASE hr_platform_db OWNER hr_admin;
 GRANT ALL PRIVILEGES ON DATABASE hr_platform_db TO hr_admin;
 \q
 ```
 
-### 4. Configure environment variables
+#### 3. Configure backend
 
-Set these in your IDE (IntelliJ → Run → Edit Configurations → Environment Variables) or export them in your terminal:
-
-```bash
-export TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxx
-export TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxx
-```
-
-### 5. application.yml
-
+Create `backend/src/main/resources/application.yml`:
 ```yaml
 spring:
-  application:
-    name: hr_platform
-
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/hr_platform_db
+    url: jdbc:postgresql://localhost:5432/hr_platform_db
     username: hr_admin
-    password: moya_hr123
+    password: your_password
     driver-class-name: org.postgresql.Driver
-
   jpa:
-    open-in-view: false
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -144,127 +194,135 @@ spring:
 server:
   port: 8081
 
+application:
+  security:
+    jwt:
+      secret-key: your_base64_jwt_secret
+      expiration: 86400000
+
 twilio:
-  account-sid: ${TWILIO_ACCOUNT_SID}
-  auth-token: ${TWILIO_AUTH_TOKEN}
+  account-sid: your_twilio_account_sid
+  auth-token: your_twilio_auth_token
   whatsapp-from: whatsapp:+14155238886
 ```
 
-### 6. Run the application
-
+#### 4. Run backend
 ```bash
+cd backend
 mvn spring-boot:run
 ```
+
+#### 5. Run frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend runs at `http://localhost:5173`
+
+---
+
+## Environment Variables
+
+### Backend (Render / local)
+| Variable | Description |
+|----------|-------------|
+| `SPRING_DATASOURCE_URL` | PostgreSQL JDBC URL |
+| `SPRING_DATASOURCE_USERNAME` | DB username |
+| `SPRING_DATASOURCE_PASSWORD` | DB password |
+| `APPLICATION_SECURITY_JWT_SECRET_KEY` | Base64 JWT secret (min 256 bits) |
+| `APPLICATION_SECURITY_JWT_EXPIRATION` | Token expiry in ms (default: 86400000) |
+| `TWILIO_ACCOUNT_SID` | Twilio Account SID |
+| `TWILIO_AUTH_TOKEN` | Twilio Auth Token |
+| `TWILIO_WHATSAPP_FROM` | WhatsApp sender number |
+| `PORT` | Server port (default: 8081) |
+
+### Frontend (Netlify / local)
+| Variable | Description |
+|----------|-------------|
+| `VITE_API_URL` | Backend API base URL |
 
 ---
 
 ## API Endpoints
 
 ### Authentication
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
 | POST | `/api/v1/auth/register` | Register a new user | No |
-| POST | `/api/v1/auth/authenticate` | Login and get JWT token | No |
+| POST | `/api/v1/auth/authenticate` | Login with username/password | No |
 
-#### Register
-```http
-POST /api/v1/auth/register
-Content-Type: application/json
+### OTP (WhatsApp Login)
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/v1/otp/send?phoneNumber=` | Send OTP to WhatsApp | No |
+| POST | `/api/v1/otp/verify?phoneNumber=&code=` | Verify OTP and get JWT | No |
 
-{
-    "username": "gilbert.cheboi",
-    "password": "password123",
-    "role": "ADMIN"
-}
-```
+### Employees
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/v1/employees` | Get all employees | ADMIN, HR |
+| POST | `/api/v1/employees` | Create employee | ADMIN, HR |
+| PUT | `/api/v1/employees/{id}` | Update employee | ADMIN, HR |
+| DELETE | `/api/v1/employees/{id}` | Delete employee | ADMIN, HR |
 
-#### Response
-```json
-{
-    "token": "eyJhbGciOiJIUzUxMiJ9..."
-}
-```
+### Departments
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/v1/departments` | Get all departments | ADMIN, HR |
+| POST | `/api/v1/departments` | Create department | ADMIN, HR |
 
-#### Login
-```http
-POST /api/v1/auth/authenticate
-Content-Type: application/json
+### Attendance
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/v1/attendance` | Get all attendance | Authenticated |
+| POST | `/api/v1/attendance/checkin` | Check in | Authenticated |
+| PUT | `/api/v1/attendance/checkout` | Check out | Authenticated |
 
-{
-    "username": "gilbert.cheboi",
-    "password": "password123"
-}
-```
+### Leave
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/v1/leave` | Get leave requests | Authenticated |
+| POST | `/api/v1/leave` | Create leave request | Authenticated |
+| PUT | `/api/v1/leave/approve/{id}` | Approve leave | ADMIN, HR |
+| PUT | `/api/v1/leave/reject/{id}` | Reject leave | ADMIN, HR |
 
----
+### Payroll
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/api/v1/payroll` | Get all payroll | ADMIN, HR |
+| GET | `/api/v1/payroll/me` | Get own payslips | ADMIN, HR, EMPLOYEE |
+| POST | `/api/v1/payroll/generate/{employeeId}` | Generate payroll | ADMIN, HR |
 
-### WhatsApp Bot
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | `/api/v1/whatsapp/send` | Manually send a WhatsApp message | Yes |
-| POST | `/api/v1/whatsapp/webhook` | Twilio webhook for incoming messages | No |
-
-#### Send Message (Manual)
-```http
-POST /api/v1/whatsapp/send?to=+254XXXXXXXXX&message=Hello
-Authorization: Bearer <token>
-```
-
-#### Webhook (Called by Twilio)
-```http
-POST /api/v1/whatsapp/webhook
-Content-Type: application/x-www-form-urlencoded
-
-From=whatsapp:+254XXXXXXXXX&Body=check in
-```
-
----
-
-### OTP Verification
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | `/api/v1/otp/send` | Send OTP to WhatsApp number | Yes |
-| POST | `/api/v1/otp/verify` | Verify OTP code | Yes |
-
-#### Send OTP
-```http
-POST /api/v1/otp/send?phoneNumber=+254XXXXXXXXX
-Authorization: Bearer <token>
-```
-
-#### Verify OTP
-```http
-POST /api/v1/otp/verify?phoneNumber=+254XXXXXXXXX&code=123456
-Authorization: Bearer <token>
-```
-
----
-
-## WhatsApp Bot Commands
-
-Employees can send these messages to the HR WhatsApp bot:
-
-| Message | Intent | Response |
-|---------|--------|----------|
-| `hi` / `hello` / `help` | GREETING | Menu of available commands |
-| `check in` | ATTENDANCE_CHECK_IN | Check-in recorded with timestamp |
-| `check out` | ATTENDANCE_CHECK_OUT | Check-out recorded with timestamp |
-| `I need leave for 3 days` | LEAVE_3_DAYS | Leave request confirmation |
-| `leave balance` | LEAVE_BALANCE | Remaining leave days |
-| `salary` / `payslip` | PAYROLL_QUERY | Payroll information |
+### WhatsApp
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/v1/whatsapp/webhook` | Twilio webhook | No |
+| POST | `/api/v1/whatsapp/send` | Send message | No |
 
 ---
 
 ## Roles & Permissions
 
-| Role | Description |
+| Role | Permissions |
 |------|-------------|
 | `ADMIN` | Full access to all endpoints |
-| `HR` | Manage employees, departments, leave approvals |
-| `EMPLOYEE` | View own profile, request leave, check in/out via WhatsApp |
+| `HR` | Manage employees, departments, leave approvals, payroll |
+| `EMPLOYEE` | View own payslip, request leave, check in/out |
+
+---
+
+## WhatsApp Bot Commands
+
+| Message | Action |
+|---------|--------|
+| `hi` / `hello` / `help` | Show command menu |
+| `check in` | Record check-in |
+| `check out` | Record check-out |
+| `leave 2026-05-20 2026-05-25 reason` | Submit leave request |
+| `leave balance` | View remaining leave days |
+| `payslip` / `salary` | View latest payslip |
 
 ---
 
@@ -274,32 +332,27 @@ Employees can send these messages to the HR WhatsApp bot:
 PENDING → ACTIVE → INACTIVE
 ```
 
-- **PENDING** — default on creation, waiting for HR activation
-- **ACTIVE** — fully onboarded employee
-- **INACTIVE** — deactivated/resigned employee
+- **PENDING** — default on creation
+- **ACTIVE** — fully onboarded
+- **INACTIVE** — deactivated/resigned
 
 ---
 
 ## WhatsApp Webhook Setup (Local Testing)
 
-1. Install and run ngrok:
 ```bash
+# Install and run ngrok
 ngrok http 8081
 ```
 
-2. Copy the ngrok HTTPS URL e.g:
-```
-https://xxxx.ngrok.io
-```
+Copy the HTTPS URL e.g. `https://xxxx.ngrok.io` and set it in:
 
-3. Go to Twilio Console → Messaging → Try it out → Send a WhatsApp message
+**Twilio Console → Messaging → Try it out → Send a WhatsApp message → Sandbox settings**
 
-4. Set the webhook URL to:
+Webhook URL:
 ```
 https://xxxx.ngrok.io/api/v1/whatsapp/webhook
 ```
-
-5. Send a message to the Twilio sandbox number from your WhatsApp
 
 ---
 
@@ -318,23 +371,46 @@ https://xxxx.ngrok.io/api/v1/whatsapp/webhook
 | Column | Type | Constraints |
 |--------|------|-------------|
 | id | BIGINT | PK, AUTO |
-| first_name | VARCHAR | - |
-| last_name | VARCHAR | - |
+| first_name | VARCHAR | NOT NULL |
+| last_name | VARCHAR | NOT NULL |
 | whatsapp_number | VARCHAR | UNIQUE, NOT NULL |
 | email | VARCHAR | UNIQUE |
 | department_id | BIGINT | FK → department |
-| position | VARCHAR | - |
-| salary | DECIMAL | - |
+| position | VARCHAR | NOT NULL |
+| salary | DECIMAL | NOT NULL |
 | status | VARCHAR | ENUM(PENDING, ACTIVE, INACTIVE) |
 | created_at | TIMESTAMP | Auto on create |
 | updated_at | TIMESTAMP | Auto on update |
 
-### department
+### attendance
 | Column | Type | Constraints |
 |--------|------|-------------|
 | id | BIGINT | PK, AUTO |
-| name | VARCHAR | UNIQUE, NOT NULL |
-| description | VARCHAR | - |
+| employee_id | BIGINT | FK → employee |
+| check_in | TIMESTAMP | - |
+| check_out | TIMESTAMP | - |
+| status | VARCHAR | PRESENT, LATE, ABSENT |
+
+### leave_request
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT | PK, AUTO |
+| employee_id | BIGINT | FK → employee |
+| start_date | DATE | NOT NULL |
+| end_date | DATE | NOT NULL |
+| reason | VARCHAR | - |
+| status | VARCHAR | PENDING, APPROVED, REJECTED |
+
+### payroll
+| Column | Type | Constraints |
+|--------|------|-------------|
+| id | BIGINT | PK, AUTO |
+| employee_id | BIGINT | FK → employee |
+| basic_salary | DECIMAL | NOT NULL |
+| bonus | DECIMAL | - |
+| deductions | DECIMAL | - |
+| net_salary | DECIMAL | NOT NULL |
+| month | DATE | NOT NULL |
 
 ### otp_codes
 | Column | Type | Constraints |
@@ -343,43 +419,36 @@ https://xxxx.ngrok.io/api/v1/whatsapp/webhook
 | phone_number | VARCHAR | - |
 | code | VARCHAR | - |
 | used | BOOLEAN | - |
-| expires_at | TIMESTAMP | 5 mins from creation |
 | created_at | TIMESTAMP | - |
+| expires_at | TIMESTAMP | 5 mins from creation |
 
 ---
 
 ## Security
 
-- All endpoints except `/api/v1/auth/**` require a valid JWT token
-- JWT tokens expire after **10 hours**
-- Passwords are encrypted using **BCrypt**
+- All endpoints except `/api/v1/auth/**`, `/api/v1/otp/**`, `/api/v1/whatsapp/**` require a valid JWT token
+- JWT tokens expire after **24 hours**
+- Passwords encrypted with **BCrypt**
 - OTP codes expire after **5 minutes** and are single-use
+- CORS restricted to allowed frontend origins
 
 ---
 
-## Running Tests with Postman
+## Deployment
 
-1. Register a user → copy the JWT token from the response
-2. Add the token to all subsequent requests:
-   - Header: `Authorization: Bearer <token>`
-3. Test WhatsApp webhook using `x-www-form-urlencoded` body
+| Service | Platform | URL |
+|---------|----------|-----|
+| Frontend | Netlify | https://hrplatformworksphere.netlify.app |
+| Backend | Render | https://worksphere-7l2w.onrender.com |
+| Database | Neon | PostgreSQL 17 |
 
----
-
-## Known Issues & Roadmap
-
-- [ ] Wire leave balance to actual database
-- [ ] Wire attendance check-in/out to database
-- [ ] Add DepartmentController REST endpoints
-- [ ] Add EmployeeController REST endpoints
-- [ ] Add leave approval workflow
-- [ ] Add payroll generation
-- [ ] Add email notifications
-- [ ] Add pagination to list endpoints
+> ⚠️ The free Render instance spins down after 15 minutes of inactivity. First request may take 30-50 seconds to wake up.
 
 ---
 
 ## Author
 
 **Gilbert Cheboi**  
-HR Platform — Built with Spring Boot & Twilio WhatsApp API
+📧 cheboigilbert7@gmail.com  
+📍 Nairobi, Kenya  
+🔗 [GitHub](https://github.com/gilbert-rgb) · [LinkedIn](https://www.linkedin.com/in/gilbert-cheboi-42b7ab351/) · [WhatsApp](https://wa.me/254743143013)
