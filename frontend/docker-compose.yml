@@ -1,8 +1,11 @@
 version: '3.8'
 
 services:
+
+  # ── Database ────────────────────────────────────────────────────────────────
   db:
     image: postgres:16
+    container_name: hr_db
     environment:
       POSTGRES_DB: hr_platform_db
       POSTGRES_USER: hr_admin
@@ -11,26 +14,42 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hr_admin -d hr_platform_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # ── Backend ─────────────────────────────────────────────────────────────────
   backend:
     build: ./backend
+    container_name: hr_backend
     ports:
       - "8081:8081"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/hr_platform_db
       SPRING_DATASOURCE_USERNAME: hr_admin
       SPRING_DATASOURCE_PASSWORD: moya_hr123
+      APPLICATION_SECURITY_JWT_SECRET_KEY: ${APPLICATION_SECURITY_JWT_SECRET_KEY}
+      APPLICATION_SECURITY_JWT_EXPIRATION: 86400000
       TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
       TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      TWILIO_WHATSAPP_NUMBER: ${TWILIO_WHATSAPP_NUMBER}
+      PORT: 8081
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: on-failure
 
+  # ── Frontend ─────────────────────────────────────────────────────────────────
   frontend:
     build: ./frontend
+    container_name: hr_frontend
     ports:
       - "80:80"
     depends_on:
       - backend
+    restart: on-failure
 
 volumes:
   pgdata:
