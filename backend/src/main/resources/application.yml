@@ -3,9 +3,9 @@ spring:
     name: hr_platform
 
   datasource:
-    url: jdbc:postgresql://ep-lively-poetry-abdxsmwk.eu-west-2.aws.neon.tech/neondb?sslmode=require
-    username: neondb_owner
-    password: npg_f9lEybma8Nsn
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -14,30 +14,21 @@ spring:
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
-      jakarta:
-        persistence:
-          validation:
-            mode: callback
-
-  messages:
-    basename: messages
 
 server:
-  port: 8081
+  port: ${PORT:8081}
   error:
     include-message: always
 
-# Twilio Configuration
 twilio:
   account-sid: ${TWILIO_ACCOUNT_SID}
   auth-token: ${TWILIO_AUTH_TOKEN}
   whatsapp-from: ${TWILIO_WHATSAPP_FROM}
 
-# JWT Configuration
 application:
   security:
     jwt:
