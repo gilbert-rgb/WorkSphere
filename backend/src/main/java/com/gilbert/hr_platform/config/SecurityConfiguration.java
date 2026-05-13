@@ -81,11 +81,17 @@ public class SecurityConfiguration {
                 "http://localhost:5173",
                 "http://127.0.0.1:5173",
                 "http://localhost:3000",
-                "http://127.0.0.1:3000",
                 "https://hrplatformworksphere.netlify.app"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "Accept",
+                "Origin",
+                "X-Requested-With"
+        ));
+        config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
