@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 // Change this line at the top of OtpLogin.jsx
-const BASE_URL = import.meta.env.VITE_API_URL || "https://worksphere-7l2w.onrender.com/api/v1";
+const BASE_URL = import.meta.env.VITE_API_URL || "https://worksphere-7l2w.onrender.com";
 
 export default function OtpLogin({ onLogin, onBack }) {
   const [step, setStep] = useState("phone");
