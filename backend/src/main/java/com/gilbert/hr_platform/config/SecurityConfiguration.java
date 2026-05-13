@@ -37,6 +37,9 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(auth -> auth
 
+                        // ── ALLOW CORS PREFLIGHT ─────────────────────────────
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                         // ── PUBLIC ──────────────────────────────────────────
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/whatsapp/**").permitAll()
