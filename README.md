@@ -8,6 +8,14 @@ A full-stack Human Resource Management Platform built with **Spring Boot** and *
 
 ---
 
+## 🔐 Login Credentials (Demo)
+
+| Role     | Username   | Password |
+|----------|------------|----------|
+| Admin    | admin.user | admin123 |
+| HR       | hr.user    | hr123    |
+| Employee | employee1  | emp123   |
+
 ## Tech Stack
 
 ### Backend
