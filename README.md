@@ -151,7 +151,7 @@ docker-compose up --build
 ```
 
 App runs at:
-- Frontend: `http://localhost`
+- Frontend: `http://localhost 5173`
 - Backend: `http://localhost:8081`
 
 ---
