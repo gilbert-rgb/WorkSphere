@@ -20,7 +20,7 @@ spring:
         format_sql: true
 
 server:
-  port: ${PORT:10000}
+  port: ${PORT:PORT}
   error:
     include-message: always
 
