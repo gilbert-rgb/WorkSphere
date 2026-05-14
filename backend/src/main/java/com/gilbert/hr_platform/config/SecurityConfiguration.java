@@ -93,15 +93,15 @@ public class SecurityConfiguration {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        // ✅ MUST match EXACT Netlify domain
-        config.setAllowedOrigins(List.of(
-                "http://localhost:5173",
-                "http://127.0.0.1:5173",
-                "http://localhost:3000",
-                "https://hrplatformworksphere.netlify.app"
+        // ✅ SAFE + WORKS FOR LOCAL + NETLIFY + RENDER
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
+                "http://127.0.0.1:*",
+                "https://*.netlify.app"
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
         config.setAllowedHeaders(List.of(
                 "Authorization",
                 "Content-Type",
@@ -112,7 +112,6 @@ public class SecurityConfiguration {
 
         config.setExposedHeaders(List.of("Authorization"));
 
-        // ⚠️ IMPORTANT: must be TRUE ONLY if NOT using "*"
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
