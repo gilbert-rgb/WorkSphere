@@ -30,45 +30,56 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                // CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+                // CSRF disabled for JWT APIs
                 .csrf(csrf -> csrf.disable())
+
+                // Stateless session (JWT)
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+
+                // AUTH RULES
                 .authorizeHttpRequests(auth -> auth
 
-                        // ── ALLOW CORS PREFLIGHT ─────────────────────────────
+                        // 🔓 allow preflight
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // ── PUBLIC ──────────────────────────────────────────
+                        // 🔓 allow root + error (IMPORTANT for Render)
+                        .requestMatchers("/", "/error", "/favicon.ico").permitAll()
+
+                        // 🔓 AUTH endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/whatsapp/**").permitAll()
                         .requestMatchers("/api/v1/otp/**").permitAll()
 
-                        // ── ADMIN ONLY ───────────────────────────────────────
+                        // 🔒 ADMIN only
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
 
-                        // ── EMPLOYEE — own payroll ───────────────────────────
-                        // MUST come before the general /api/v1/payroll/** rule
-                        .requestMatchers(HttpMethod.GET, "/api/v1/payroll/me")
-                        .hasAnyRole("ADMIN", "HR", "EMPLOYEE")
-
-                        // ── ADMIN + HR ───────────────────────────────────────
+                        // 🔒 HR + ADMIN
                         .requestMatchers("/api/v1/employees/**").hasAnyRole("ADMIN", "HR")
                         .requestMatchers("/api/v1/departments/**").hasAnyRole("ADMIN", "HR")
-                        .requestMatchers("/api/v1/leave/approve/**").hasAnyRole("ADMIN", "HR")
-                        .requestMatchers("/api/v1/leave/reject/**").hasAnyRole("ADMIN", "HR")
                         .requestMatchers("/api/v1/payroll/**").hasAnyRole("ADMIN", "HR")
 
-                        // ── ALL AUTHENTICATED USERS ──────────────────────────
+                        // 🔒 Leave approvals
+                        .requestMatchers("/api/v1/leave/approve/**").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers("/api/v1/leave/reject/**").hasAnyRole("ADMIN", "HR")
+
+                        // 🔒 Authenticated users
                         .requestMatchers("/api/v1/leave/**").authenticated()
                         .requestMatchers("/api/v1/attendance/**").authenticated()
 
-                        // ── ANYTHING ELSE ────────────────────────────────────
+                        // 🔒 everything else
                         .anyRequest().authenticated()
                 )
+
+                // AUTH PROVIDER
                 .authenticationProvider(authenticationProvider)
+
+                // JWT FILTER
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
@@ -79,13 +90,17 @@ public class SecurityConfiguration {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration config = new CorsConfiguration();
+
+        // ✅ MUST match EXACT Netlify domain
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
                 "http://127.0.0.1:5173",
                 "http://localhost:3000",
                 "https://hrplatformworksphere.netlify.app"
         ));
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of(
                 "Authorization",
@@ -94,11 +109,15 @@ public class SecurityConfiguration {
                 "Origin",
                 "X-Requested-With"
         ));
+
         config.setExposedHeaders(List.of("Authorization"));
+
+        // ⚠️ IMPORTANT: must be TRUE ONLY if NOT using "*"
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 }
