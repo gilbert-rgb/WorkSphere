@@ -2,17 +2,26 @@ const BASE_URL =
   import.meta.env.VITE_API_URL ||
   "https://worksphere-7l2w.onrender.com/api/v1";
 
+// =========================
+// TOKEN HELPERS
+// =========================
 const getToken = () => {
   const user = localStorage.getItem("hr_user");
   return user ? JSON.parse(user).token : null;
 };
 
-const headers = () => ({
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${getToken()}`,
-});
+const headers = () => {
+  const token = getToken();
 
+  return {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  };
+};
+
+// =========================
 // AUTH
+// =========================
 export const login = (username, password) =>
   fetch(`${BASE_URL}/auth/authenticate`, {
     method: "POST",
@@ -27,7 +36,17 @@ export const register = (data) =>
     body: JSON.stringify(data),
   }).then((r) => r.json());
 
+// ✅ FIX: added missing export (this is what broke your build)
+export const registerUser = (data) =>
+  fetch(`${BASE_URL}/auth/register`, {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify(data),
+  }).then((r) => r.json());
+
+// =========================
 // EMPLOYEES
+// =========================
 export const getEmployees = () =>
   fetch(`${BASE_URL}/employees`, { headers: headers() }).then((r) => r.json());
 
@@ -51,7 +70,9 @@ export const deleteEmployee = (id) =>
     headers: headers(),
   });
 
+// =========================
 // DEPARTMENTS
+// =========================
 export const getDepartments = () =>
   fetch(`${BASE_URL}/departments`, { headers: headers() }).then((r) => r.json());
 
@@ -62,7 +83,9 @@ export const createDepartment = (name) =>
     body: JSON.stringify({ name }),
   }).then((r) => r.json());
 
+// =========================
 // LEAVE
+// =========================
 export const getLeaveRequests = () =>
   fetch(`${BASE_URL}/leave`, { headers: headers() }).then((r) => r.json());
 
@@ -85,7 +108,9 @@ export const rejectLeave = (id) =>
     headers: headers(),
   }).then((r) => r.json());
 
+// =========================
 // ATTENDANCE
+// =========================
 export const getAttendance = () =>
   fetch(`${BASE_URL}/attendance`, { headers: headers() }).then((r) => r.json());
 
